@@ -1,0 +1,17 @@
+{
+    "name": "asetss/ozon_parser",
+    "description": "ozon parser",
+    "authors": [
+        {
+            "name": "Aset S",
+            "email": "assets92@gmail.com"
+        }
+    ],
+    "require": {
+        "paquettg/php-html-parser": "^3.1",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.2"
+    }
+}
