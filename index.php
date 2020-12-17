@@ -12,7 +12,6 @@ new Database();
 
 $url = 'https://www.ozon.ru/';
 
-//$user = OzTopProject::create(['title'=> 1,'userId'=> 1, 'projectId' => 1]);
 $dom = new Dom;
 $dom->loadFromUrl($url);
 $dom = $dom->find('header')[0];
@@ -76,6 +75,11 @@ foreach($a as $element) {
 $client = new GuzzleHttp\Client(['base_uri' => 'https://ozon.ru/']);
 
 $data = [];
+
+
+// testing one category on db
+//$parents_id = [$parents_id[0]];
+
 foreach($parents_id as $key => $parent) {
 
   $response = $client->request('GET','/api/composer-api.bx/_action/categoryChildV2?menuId=1&categoryId=' . $parent['parent_id']);
@@ -85,25 +89,29 @@ foreach($parents_id as $key => $parent) {
   
 }
 
- //dump($data);
-
  foreach($data as $category) {
+  // dump('++++++' . $category['parent_name'] . '++++++');
 
-   dump('++++++' . $category['parent_name'] . '++++++');
+    // if (!OzTopProject::where('title', '=', $category['parent_name'])->exists()) {
+         $parent_category =  OzTopProject::create(['title'=> $category['parent_name'],'userId'=> 1, 'projectId' => 1]);
+    // }
 
     foreach($category['categories'] as $categories) {
          if(array_key_exists('categories', $categories)) {
-
-           dump("---------------------");
-           dump($categories['title']);
-           dump("---------------------");
+         //  dump("---------------------");
+         //  dump($categories['title']);
+             $sub_category =  OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $parent_category->id]);
+         //  dump("---------------------");
 
            foreach($categories['categories']  as $sub_catergory) {
-             dump($sub_catergory['title']);
+           //  dump($sub_catergory['title']);
+           //  dump($categories['id']);
+               $sub_category_child =  OzTopProject::create(['title'=> $sub_catergory['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $sub_category->id]);
            }
 
          } else {
-           dump($categories['title']);
+          //dump($categories);
+             OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1]);
          }
     }
 }
