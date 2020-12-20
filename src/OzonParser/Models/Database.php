@@ -1,6 +1,6 @@
 <?php 
 
-namespace Models; 
+namespace OzonParser\Models; 
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
