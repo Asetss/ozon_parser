@@ -45,6 +45,7 @@ class OzonParser {
 				$element_data = [
 					'parent_id' => (int) $output,
 					'parent_name' => $element->find('span')->innerHtml,
+                    'url' => $element->href
 				];
 
 				array_push($this->category,  $element_data);
@@ -62,26 +63,28 @@ class OzonParser {
 			$response = $client->request('GET','/api/composer-api.bx/_action/categoryChildV2?menuId=1&categoryId=' . $parent['parent_id']);
 		  
 			$data[$key] = json_decode($response->getBody(), true);
-			  $data[$key]['parent_name'] = $parent['parent_name'];
+			$data[$key]['parent_name'] = $parent['parent_name'];
+            $data[$key]['url'] = $parent['url'];
 			
 		}
+		//dump($data);
 
 		foreach($data as $category) {
 
-			 $parent_category =  OzTopProject::create(['title'=> $category['parent_name'],'userId'=> 1, 'projectId' => 1]);
+			 $parent_category =  OzTopProject::create(['title'=> $category['parent_name'],'userId'=> 1, 'projectId' => 1, 'currentUrl' => $category['url']]);
 
 			  foreach($category['categories'] as $categories) {
 				   if(array_key_exists('categories', $categories)) {
 
-					$sub_category =  OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $parent_category->id]);
+					$sub_category =  OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $parent_category->id, 'currentUrl' => $categories['url']]);
 
 					 foreach($categories['categories']  as $sub_catergory) {
 
-						 $sub_category_child =  OzTopProject::create(['title'=> $sub_catergory['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $sub_category->id]);
+						 $sub_category_child =  OzTopProject::create(['title'=> $sub_catergory['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $sub_category->id, 'currentUrl' => $sub_catergory['url']]);
 					 }
 		  
 				   } else {
-					   OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1]);
+					   OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'currentUrl' => $categories['url']]);
 				   }
 			  }
 		  }
