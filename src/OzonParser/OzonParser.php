@@ -80,8 +80,8 @@ class OzonParser {
                         'userId'=> 1,
                         'projectId' => 1,
                         'parent_id' => $parent_category->id,
-                        'currentUrl' => $categories['url']]
-                    );
+                        'currentUrl' => $categories['url']
+                    ]);
 
 					 foreach($categories['categories']  as $sub_cat) {
 
@@ -99,8 +99,8 @@ class OzonParser {
 					       'title'=> $categories['title'],
                            'userId'=> 1,
                            'projectId' => 1,
-                           'currentUrl' => $categories['url']]
-                       );
+                           'currentUrl' => $categories['url']
+                       ]);
 				   }
 			  }
 		}
