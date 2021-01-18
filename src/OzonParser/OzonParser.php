@@ -13,7 +13,7 @@ class OzonParser {
 	public $category = [];
 
 	public function __construct() {
-       	        new Database();
+       	new Database();
 	}
 
 	public function run() {
@@ -82,18 +82,18 @@ class OzonParser {
 						'projectId' => 1,
 						'parent_id' => $parent_category->id,
 						'currentUrl' => $categories['url']
+					]);
+
+					foreach($categories['categories']  as $sub_cat) {
+
+						OzTopProject::create(
+							['title'=> $sub_cat['title'],
+							'userId'=> 1,
+							'projectId' => 1,
+							'parent_id' => $sub_category->id,
+							'currentUrl' => $sub_cat['url']
 						]);
-
-						foreach($categories['categories']  as $sub_cat) {
-
-							OzTopProject::create(
-								['title'=> $sub_cat['title'],
-								'userId'=> 1,
-								'projectId' => 1,
-								'parent_id' => $sub_category->id,
-								'currentUrl' => $sub_cat['url']
-							]);
-						}
+					}
 		
 				} else {
 					
