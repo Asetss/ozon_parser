@@ -13,7 +13,7 @@ class OzonParser {
 	public $category = [];
 
 	public function __construct() {
-       	        new Database();
+       	new Database();
 	}
 
 	public function run() {
@@ -76,12 +76,12 @@ class OzonParser {
 				  
 				if(array_key_exists('categories', $categories)) {
 
-					$sub_category =  OzTopProject::create([
-						'title'=> $categories['title'],
-						'userId'=> 1,
-						'projectId' => 1,
-						'parent_id' => $parent_category->id,
-						'currentUrl' => $categories['url']
+						$sub_category =  OzTopProject::create([
+							'title'=> $categories['title'],
+							'userId'=> 1,
+							'projectId' => 1,
+							'parent_id' => $parent_category->id,
+							'currentUrl' => $categories['url']
 						]);
 
 						foreach($categories['categories']  as $sub_cat) {
