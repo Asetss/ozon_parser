@@ -43,8 +43,8 @@ class OzonParser {
 				$output = preg_replace( '/[^0-9]/', '', $element->href );
 
 				$element_data = [
-					'parent_id' => (int) $output,
-					'parent_name' => $element->find('span')->innerHtml,
+                    'parent_id' => (int) $output,
+                    'parent_name' => $element->find('span')->innerHtml,
                     'url' => $element->href
 				];
 
@@ -62,31 +62,47 @@ class OzonParser {
 
 			$response = $client->request('GET','/api/composer-api.bx/_action/categoryChildV2?menuId=1&categoryId=' . $parent['parent_id']);
 		  
-			$data[$key] = json_decode($response->getBody(), true);
-			$data[$key]['parent_name'] = $parent['parent_name'];
+            $data[$key] = json_decode($response->getBody(), true);
+            $data[$key]['parent_name'] = $parent['parent_name'];
             $data[$key]['url'] = $parent['url'];
 			
 		}
-		//dump($data);
 
 		foreach($data as $category) {
 
-			 $parent_category =  OzTopProject::create(['title'=> $category['parent_name'],'userId'=> 1, 'projectId' => 1, 'currentUrl' => $category['url']]);
+			 $parent_category =  OzTopProject::create(['title'=> $category['parent_name'], 'userId'=> 1, 'projectId' => 1, 'currentUrl' => $category['url']]);
 
 			  foreach($category['categories'] as $categories) {
 				   if(array_key_exists('categories', $categories)) {
 
-					$sub_category =  OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $parent_category->id, 'currentUrl' => $categories['url']]);
+					$sub_category =  OzTopProject::create([
+					    'title'=> $categories['title'],
+                        'userId'=> 1,
+                        'projectId' => 1,
+                        'parent_id' => $parent_category->id,
+                        'currentUrl' => $categories['url']]
+                    );
 
-					 foreach($categories['categories']  as $sub_catergory) {
+					 foreach($categories['categories']  as $sub_cat) {
 
-						 $sub_category_child =  OzTopProject::create(['title'=> $sub_catergory['title'],'userId'=> 1, 'projectId' => 1, 'parent_id' => $sub_category->id, 'currentUrl' => $sub_catergory['url']]);
+						 OzTopProject::create(
+						     ['title'=> $sub_cat['title'],
+                                 'userId'=> 1,
+                                 'projectId' => 1,
+                                 'parent_id' =>
+                                 $sub_category->id, 'currentUrl' => $sub_cat['url']
+                             ]);
 					 }
 		  
 				   } else {
-					   OzTopProject::create(['title'=> $categories['title'],'userId'=> 1, 'projectId' => 1, 'currentUrl' => $categories['url']]);
+					   OzTopProject::create([
+					       'title'=> $categories['title'],
+                           'userId'=> 1,
+                           'projectId' => 1,
+                           'currentUrl' => $categories['url']]
+                       );
 				   }
 			  }
-		  }
+		}
 	}
 }
