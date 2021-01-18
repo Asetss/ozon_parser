@@ -76,24 +76,24 @@ class OzonParser {
 				  
 				if(array_key_exists('categories', $categories)) {
 
-						$sub_category =  OzTopProject::create([
-							'title'=> $categories['title'],
+					$sub_category =  OzTopProject::create([
+						'title'=> $categories['title'],
+						'userId'=> 1,
+						'projectId' => 1,
+						'parent_id' => $parent_category->id,
+						'currentUrl' => $categories['url']
+					]);
+
+					foreach($categories['categories']  as $sub_cat) {
+
+						OzTopProject::create(
+							['title'=> $sub_cat['title'],
 							'userId'=> 1,
 							'projectId' => 1,
-							'parent_id' => $parent_category->id,
-							'currentUrl' => $categories['url']
+							'parent_id' => $sub_category->id,
+							'currentUrl' => $sub_cat['url']
 						]);
-
-						foreach($categories['categories']  as $sub_cat) {
-
-							OzTopProject::create(
-								['title'=> $sub_cat['title'],
-								'userId'=> 1,
-								'projectId' => 1,
-								'parent_id' => $sub_category->id,
-								'currentUrl' => $sub_cat['url']
-							]);
-						}
+					}
 		
 				} else {
 					
