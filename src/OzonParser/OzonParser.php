@@ -13,7 +13,7 @@ class OzonParser {
 	public $category = [];
 
 	public function __construct() {
-       	new Database();
+         	new Database();
 	}
 
 	public function run() {
